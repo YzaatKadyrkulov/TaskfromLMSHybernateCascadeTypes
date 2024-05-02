@@ -67,8 +67,8 @@ public class CustomerDaoImpl implements CustomerDao {
     @Override
     public String updateCustomerById(Long customerId, Customer newCustomer) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Customer updateCustomerId = entityManager.find(Customer.class, customerId);
         try {
+            Customer updateCustomerId = entityManager.find(Customer.class, customerId);
             if (updateCustomerId != null) {
                 updateCustomerId.setFirstName(newCustomer.getFirstName());
                 updateCustomerId.setLastName(newCustomer.getLastName());
@@ -93,7 +93,18 @@ public class CustomerDaoImpl implements CustomerDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            entityManager.remove(entityManager.find(Customer.class, customerId));
+            Customer customer = entityManager.find(Customer.class, customerId);
+            for (Rent_info rentInfo : customer.getRentInfoList()) {
+                if (rentInfo != null) {
+                    if (!rentInfo.getCheckOut().isBefore(LocalDate.now())) {
+                        throw new RuntimeException("error");
+                    }
+                }
+//                assert rentInfo != null;
+                rentInfo.getAgency().getRentInfos().remove(rentInfo);
+                rentInfo.getHouse().setRentInfo(null);
+            }
+            entityManager.remove(customer);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             rollBack(entityManager);
@@ -119,6 +130,7 @@ public class CustomerDaoImpl implements CustomerDao {
             rentInfo.setAgency(agency);
             rentInfo.setCheckIn(checkIn);
             rentInfo.setCheckOut(checkout);
+
 
             house.setRentInfo(rentInfo);
             agency.getRentInfos().add(rentInfo);

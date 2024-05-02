@@ -4,6 +4,7 @@ import hybernate.config.DatabaseHibernateConfig;
 import hybernate.dao.AgencyDao;
 import hybernate.entity.Address;
 import hybernate.entity.Agency;
+import hybernate.entity.Rent_info;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -23,6 +24,9 @@ public class AgencyDaoImpl implements AgencyDao {
             entityManager.persist(agency);
             entityManager.persist(address);
 
+            if(agency.getRentInfos() == null){
+                agency.setRentInfos(new ArrayList<>());
+            }
             agency.setAddress(address);
 
             entityManager.getTransaction().commit();
@@ -95,6 +99,9 @@ public class AgencyDaoImpl implements AgencyDao {
             entityManager.getTransaction().begin();
             Agency agency = entityManager.find(Agency.class, agencyId);
 
+            for (Rent_info rentInfo : agency.getRentInfos()) {
+                rentInfo.getHouse().setRentInfo(null);
+            }
             entityManager.remove(agency);
             entityManager.getTransaction().commit();
         } catch (Exception e) {

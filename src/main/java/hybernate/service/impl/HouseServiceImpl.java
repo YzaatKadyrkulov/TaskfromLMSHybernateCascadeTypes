@@ -7,6 +7,7 @@ import hybernate.service.HouseService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class HouseServiceImpl implements HouseService {
@@ -29,6 +30,7 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public String updateHouseById(Long house, House newHouse) {
+        houseDao.findHouseById(house).orElseThrow(() -> new NoSuchElementException(String.format("House with id : %s not found!", house)));
         return houseDao.updateHouseById(house, newHouse);
     }
 

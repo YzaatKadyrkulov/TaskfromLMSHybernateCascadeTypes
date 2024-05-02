@@ -173,12 +173,13 @@ public class App {
                                 Long agencyId = new Scanner(System.in).nextLong();
 
                                 System.out.println("Write checkIn: ");
-                                LocalDate checkIn = LocalDate.ofEpochDay(new Scanner(System.in).nextLong());
+//                                LocalDate checkIn = LocalDate.ofEpochDay(new Scanner(System.in).nextLong());
 
                                 System.out.println("Write checkOut: ");
-                                LocalDate checkOut = LocalDate.ofEpochDay(new Scanner(System.in).nextLong());
+//                                LocalDate checkOut = LocalDate.ofEpochDay(new Scanner(System.in).nextLong());
 
-                                System.out.println(customerService.saveCustomerWithRent(customer, houseId, agencyId, checkIn, checkOut));
+                                System.out.println(customerService.saveCustomerWithRent(customer, houseId, agencyId,
+                                        LocalDate.of(2024, 5, 2), LocalDate.of(2024, 5, 4)));
                             }
                             case 3 -> {
                                 System.out.println("Write customerId: ");
@@ -397,10 +398,10 @@ public class App {
                         switch (new Scanner(System.in).nextInt()) {
                             case 1 -> {
                                 System.out.println("Write checkIn: ");
-                                LocalDate checkIn = LocalDate.ofEpochDay(new Scanner(System.in).nextLong());
+                                LocalDate checkIn = LocalDate.of(1970, 10, 10);
 
                                 System.out.println("Write checkOut: ");
-                                LocalDate checkOut = LocalDate.ofEpochDay(new Scanner(System.in).nextLong());
+                                LocalDate checkOut =  LocalDate.of(1980, 10, 10);
 
                                 System.out.println(rentInfoService.rentInfoBetweenDates(checkIn, checkOut));
                             }

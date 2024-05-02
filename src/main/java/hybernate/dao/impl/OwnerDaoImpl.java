@@ -99,36 +99,32 @@ public class OwnerDaoImpl implements OwnerDao {
         }
     }
 
+    //    Owner-ди очуруп жатканда, house-тары чогу очот. Бирок ижарасы жок болсо очсун,
+//    эгерде ижарасы бар болсо checkout датасын текшерсин. Учурдагы датадан мурун болсо
+//    rent_info менен чогу очуп кетсин. Бирок customer очпосун.
     @Override
     public String deleteOwnerById(Long ownerId) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        try {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             entityManager.getTransaction().begin();
             Owner owner = entityManager.find(Owner.class, ownerId);
-            List<Rent_info> rentInfo = owner.getRentInfos();
-            if (!rentInfo.isEmpty()) {
-                for (Rent_info info : rentInfo) {
-                    if (info.getCheckOut().isAfter(LocalDate.now())) {
-                        return "cannot delete owner. his house is rented";
-                    }
-                    Agency agency = info.getAgency();
-                    agency.getRentInfos().remove(info);
-                    Customer customer = info.getCustomer();
-                    customer.getRentInfoList().remove(info);
-                    entityManager.remove(info);
-                }
+            if (owner == null) {
+                return "Owner with: " + ownerId + " not found";
             }
-            List<Agency> findAgency = owner.getAgencies();
-            for (Agency agency : findAgency) {
-                agency.getOwners().remove(owner);
+            for(House house : owner.getHouses()){
+                for(Rent_info rentInfo : house.getOwner().getRentInfos()){
+                    if(rentInfo.getCheckOut().isBefore(LocalDate.now())){
+                        entityManager.remove(rentInfo);
+                    }
+                }
+                entityManager.remove(house);
             }
             entityManager.remove(owner);
+
             entityManager.getTransaction().commit();
-            return owner.getFirstName() + " Successfully deleted";
         } catch (Exception e) {
-            rollback(entityManager);
             return e.getMessage();
         }
+        return "Successfully removed";
     }
 
     @Override

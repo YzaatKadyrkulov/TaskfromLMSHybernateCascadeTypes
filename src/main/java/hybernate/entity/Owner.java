@@ -33,10 +33,10 @@ public class Owner {
     @ManyToMany
     private List<Agency> agencies;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner")
     private List<House> houses;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner")
     private List<Rent_info> rentInfos;
 
     public Owner(String firstName, String lastName, String email, LocalDate dateOfBirth, Gender gender) {
@@ -57,7 +57,8 @@ public class Owner {
     @Override
     public String toString() {
         return "Owner{" +
-                "firstName='" + firstName + '\'' +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", dateOfBirth=" + dateOfBirth +

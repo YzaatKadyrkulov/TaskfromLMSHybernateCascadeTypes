@@ -45,7 +45,8 @@ public class House {
     @Override
     public String toString() {
         return "House{" +
-                "houseType=" + houseType +
+                "id=" + id +
+                ", houseType=" + houseType +
                 ", price=" + price +
                 ", rating=" + rating +
                 ", description='" + description + '\'' +

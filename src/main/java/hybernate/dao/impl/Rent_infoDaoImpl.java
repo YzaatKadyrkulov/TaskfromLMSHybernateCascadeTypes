@@ -40,7 +40,8 @@ public class Rent_infoDaoImpl implements Rent_infoDao {
         Long countHouse = 0L;
         try {
             entityManager.getTransaction().begin();
-
+            Rent_info rentInfo = new Rent_info();
+            rentInfo.setOwner(null);
             countHouse = entityManager.createQuery("""
             select count(r) from Rent_info r
             where r.agency.id =:agencyId and r.checkIn <=:currentDate

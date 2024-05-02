@@ -2,6 +2,7 @@ package hybernate.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Check;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,18 +20,20 @@ public class Rent_info {
     private Long id;
 
     @Column(name = "check_in")
+    @Check(constraints = "check_in <= check_out")
     private LocalDate checkIn;
 
     @Column(name = "check_out")
+    @Check(constraints = "check_out >= check_in")
     private LocalDate checkOut;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.DETACH})
     private House house;
 
     @ManyToOne
     private Customer customer;
 
-    @ManyToOne(optional = true)
+    @ManyToOne
     private Agency agency;
 
     @ManyToOne
@@ -43,8 +46,9 @@ public class Rent_info {
 
     @Override
     public String toString() {
-        return "RentInfo{" +
-                "checkIn=" + checkIn +
+        return "Rent_info{" +
+                "id=" + id +
+                ", checkIn=" + checkIn +
                 ", checkOut=" + checkOut +
                 '}';
     }

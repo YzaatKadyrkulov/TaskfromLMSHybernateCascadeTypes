@@ -3,7 +3,6 @@ package hybernate.entity;
 import hybernate.service.impl.AgencyServiceImpl;
 import jakarta.persistence.*;
 import lombok.*;
-import org.intellij.lang.annotations.Pattern;
 
 import java.util.List;
 
@@ -25,17 +24,15 @@ public class Agency {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToOne(cascade = {CascadeType.MERGE,
-            CascadeType.REFRESH,
-            CascadeType.REMOVE},orphanRemoval = true)
+    @OneToOne(cascade = {CascadeType.DETACH,
+            CascadeType.REMOVE})
     private Address address;
 
     @ManyToMany(mappedBy = "agencies")
     private List<Owner> owners;
 
-    @OneToMany(cascade = {CascadeType.MERGE,
-            CascadeType.REFRESH,
-            CascadeType.REMOVE},orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.DETACH,
+            CascadeType.REMOVE})
     private List<Rent_info> rentInfos;
 
     public Agency(String name, String phoneNumber) {
